@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import Companies, {
-  COMPANIES_TYPES,
-} from './FavoriteCompaniesSelect/Companies';
+import Companies from './FavoriteCompaniesSelect/Companies';
+import { CompaniesTypes } from './types/companies-types';
 
 function App() {
   const [selectedCompanies, setSelectedCompanies] = useState([]);
@@ -21,48 +20,52 @@ function App() {
   return (
     <div>
       <Companies
-        companyType={[COMPANIES_TYPES.AFFILIATE]}
+        company_ids={selectedCompanies}
+        changeCompany={setSelectedCompanies}
+        companiesTypes={[CompaniesTypes.Affiliate]}
         showCountValues
         fullText
         variant="standard"
-        changeCompany={setSelectedCompanies}
-        company_ids={selectedCompanies}
       />
+
       <Companies
-        companyType={[COMPANIES_TYPES.AFFILIATE, COMPANIES_TYPES.CONTRACT]}
-        className={'driver-companies'}
+        company_ids={selectedCompanies}
+        changeCompany={setSelectedCompanies}
+        companiesTypes={[CompaniesTypes.Affiliate, CompaniesTypes.Contract]}
+        className="driver-companies"
         allName="All"
         label="Companies"
+      />
+
+      <Companies
         company_ids={selectedCompanies}
         changeCompany={setSelectedCompanies}
-      />
-      <Companies
-        fullText={true}
-        companyType={[COMPANIES_TYPES.AFFILIATE]}
-        allName={'All Companies'}
-        className={'header-rides__companies'}
+        companiesTypes={[CompaniesTypes.Affiliate]}
+        className="header-rides__companies"
+        fullText
+        allName="All Companies"
         showCountValues
         variant="standard"
+      />
+
+      <Companies
         company_ids={selectedCompanies}
         changeCompany={setSelectedCompanies}
-      />
-      <Companies
-        companyType={[COMPANIES_TYPES.AFFILIATE]}
+        companiesTypes={[CompaniesTypes.Affiliate]}
         showCountValues
         fullText
         variant="standard"
-        company_ids={selectedCompanies}
-        changeCompany={setSelectedCompanies}
-        allName={'All Companies'}
+        allName="All Companies"
       />
+
       <Companies
-        fullText
-        companyType={[COMPANIES_TYPES.AFFILIATE]}
-        allName={'All Companies'}
-        className={'header-rides__companies'}
-        variant="standard"
         company_ids={selectedCompanies}
         changeCompany={setSelectedCompanies}
+        companiesTypes={[CompaniesTypes.Affiliate]}
+        className="header-rides__companies"
+        fullText
+        allName="All Companies"
+        variant="standard"
         getCompanyStats={company => companyUsers[company.name] || 0}
       />
     </div>

@@ -1,5 +1,5 @@
 // @ts-check
-import React, { useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import Select from '../Select/Select';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions } from '../services';
@@ -14,23 +14,37 @@ import {
 } from '@mui/material';
 import './companies.css';
 import company_stats_data from '../mock/compnies_stats.json';
+import { CompaniesTypes } from '../types/companies-types';
 
-export const COMPANIES_TYPES = {
-  AFFILIATE: 'affiliate',
-  CONTRACT: 'contract',
-};
-const Companies = props => {
+interface Props {
+  companiesTypes: CompaniesTypes[];
+  className?: string;
+  showCountValues?: boolean;
+  fullText?: boolean;
+  variant?: 'standard';
+  changeCompany: Dispatch<SetStateAction<never[]>>;
+  company_ids: never[];
+  allName?: 'All' | 'All Companies';
+  label?: 'Companies';
+  // getCompanyStats: (company: any) => void;
+}
+
+// companyType
+const Companies: FC<Props> = props => {
+  const { companiesTypes, company_ids } = props;
+  const dispatch = useDispatch();
+  const [favorite_companies, set_favorite_companies] = useState([]);
+  const [res, set_res] = useState([]);
+  const [companies_by_types, set_companies_by_types] = useState([]);
+
   const ALL_DATA_FORMAT = { key: 0, value: 'all', title: 'All Companies' };
+
   const companies = useSelector(state => state.app.companies);
   const company_stats = company_stats_data; // useSelector((state) => state.rides.companies);
-  const dispatch = useDispatch();
   const setFavoriteCompanies = data =>
     dispatch(actions.appActions.setFavoriteCompanies(data));
   const getFavoriteCompanies = () =>
     dispatch(actions.appActions.getFavoriteCompanies());
-  const [favorite_companies, set_favorite_companies] = useState([]);
-  const [res, set_res] = useState([]);
-  const [companies_by_types, set_companies_by_types] = useState([]);
 
   const getFavouriteNotByType = () => {
     const generalFavorite = getFavoriteCompanies();
@@ -41,8 +55,8 @@ const Companies = props => {
   };
 
   const getCompaniesByType = () =>
-    props.companyType
-      ? companies.filter(company => props.companyType.includes(company.type))
+    companiesTypes
+      ? companies.filter(company => companiesTypes.includes(company.type))
       : companies;
 
   const toggleFavoriteCompanies = (e, companyId) => {
@@ -107,8 +121,8 @@ const Companies = props => {
   }) => (
     <MenuItem sx={{ pt: '2px', pb: '2px' }} key={id} value={id}>
       <IconButton
-        className={'favourite-icon'}
-        size={'small'}
+        className="favourite-icon"
+        size="small"
         color="primary"
         onClick={event => toggleFunction(event, id)}
       >
@@ -209,7 +223,7 @@ const Companies = props => {
 
   const getCountValues = ({ length }) => {
     if (length === 0) {
-      return props.allName || 'All';
+      return props.allName ?? 'All';
     }
     return `${length} ${
       props.fullText ? (length > 1 ? 'Companies' : 'Company') : 'Comp'
@@ -230,9 +244,10 @@ const Companies = props => {
           {props.label}
         </InputLabel>
       )}
+
       <Select
-        label={'favorite companies'}
-        className={'companies-select'}
+        label="favorite companies"
+        className="companies-select"
         labelId="favorite_companies_select"
         id="favorite_companies_select_id"
         multiple
@@ -240,12 +255,12 @@ const Companies = props => {
           name: 'company_ids',
         }}
         displayEmpty
-        value={[...props.company_ids]}
+        value={company_ids}
         changed={update}
         input={<Input />}
         renderValue={props.showCountValues ? getCountValues : getValue}
         onClose={onClose}
-        variant={props.variant || 'outlined'}
+        variant={props.variant ?? 'outlined'}
         onOpen={onOpen}
       >
         {getAllInfoMenuItem()}
