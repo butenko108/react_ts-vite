@@ -12,18 +12,19 @@ import {
   InputLabel,
   MenuItem,
 } from '@mui/material';
-import './companies.css';
 import company_stats_data from '../mock/compnies_stats.json';
 import { CompaniesTypes } from '../types/companies-types';
 
+import './companies.css';
+
 interface Props {
-  companiesTypes: CompaniesTypes[];
+  company_ids: never[];
+  changeCompany: Dispatch<SetStateAction<never[]>>;
   className?: string;
+  isStandard?: boolean;
+  companiesTypes: CompaniesTypes[];
   showCountValues?: boolean;
   fullText?: boolean;
-  variant?: 'standard';
-  changeCompany: Dispatch<SetStateAction<never[]>>;
-  company_ids: never[];
   allName?: 'All' | 'All Companies';
   label?: 'Companies';
   // getCompanyStats: (company: any) => void;
@@ -31,7 +32,8 @@ interface Props {
 
 // companyType
 const Companies: FC<Props> = props => {
-  const { companiesTypes, company_ids } = props;
+  const { companiesTypes, company_ids, showCountValues, isStandard } = props;
+
   const dispatch = useDispatch();
   const [favorite_companies, set_favorite_companies] = useState([]);
   const [res, set_res] = useState([]);
@@ -213,12 +215,10 @@ const Companies: FC<Props> = props => {
     ]);
     set_favorite_companies([]);
     set_res([]);
-    props.onClose && props.onClose();
   };
 
   const onOpen = () => {
     set_companies_by_types(getCompaniesByType());
-    props.onOpen && props.onOpen();
   };
 
   const getCountValues = ({ length }) => {
@@ -246,10 +246,10 @@ const Companies: FC<Props> = props => {
       )}
 
       <Select
-        label="favorite companies"
+        // label="favorite companies"
+        // labelId="favorite_companies_select"
+        // id="favorite_companies_select_id"
         className="companies-select"
-        labelId="favorite_companies_select"
-        id="favorite_companies_select_id"
         multiple
         inputProps={{
           name: 'company_ids',
@@ -258,9 +258,9 @@ const Companies: FC<Props> = props => {
         value={company_ids}
         changed={update}
         input={<Input />}
-        renderValue={props.showCountValues ? getCountValues : getValue}
+        renderValue={showCountValues ? getCountValues : getValue}
         onClose={onClose}
-        variant={props.variant ?? 'outlined'}
+        variant={isStandard ? 'standard' : 'outlined'}
         onOpen={onOpen}
       >
         {getAllInfoMenuItem()}

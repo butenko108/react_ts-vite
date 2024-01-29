@@ -1,9 +1,24 @@
 import React from 'react';
-import { Select } from '@mui/material';
+import { Select as MaterialSelect } from '@mui/material';
 import './select.css';
 
-const select = (props) => (
-    <Select
+interface Props {
+  className?: string;
+  multiple?: boolean;
+  displayEmpty?: boolean;
+  value: never[];
+  variant: string;
+  // renderValue: ;
+  // inputProps: ;
+  // onChange: ;
+  // MenuProps: ;
+  // onClose: ;
+  // onOpen: ;
+  // open: ;
+}
+
+const Select = (props) => (
+    <MaterialSelect
         displayEmpty={props.displayEmpty}
         multiple={props.multiple}
         value={props.value}
@@ -18,7 +33,7 @@ const select = (props) => (
         open={props.open}
     >
         {props.children}
-    </Select>
+    </MaterialSelect>
 );
 
-export default React.memo(select);
+export default React.memo(Select);

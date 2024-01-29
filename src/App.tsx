@@ -25,7 +25,7 @@ function App() {
         companiesTypes={[CompaniesTypes.Affiliate]}
         showCountValues
         fullText
-        variant="standard"
+        isStandard
       />
 
       <Companies
@@ -45,7 +45,7 @@ function App() {
         fullText
         allName="All Companies"
         showCountValues
-        variant="standard"
+        isStandard
       />
 
       <Companies
@@ -54,7 +54,7 @@ function App() {
         companiesTypes={[CompaniesTypes.Affiliate]}
         showCountValues
         fullText
-        variant="standard"
+        isStandard
         allName="All Companies"
       />
 
@@ -65,7 +65,7 @@ function App() {
         className="header-rides__companies"
         fullText
         allName="All Companies"
-        variant="standard"
+        isStandard
         getCompanyStats={company => companyUsers[company.name] || 0}
       />
     </div>
