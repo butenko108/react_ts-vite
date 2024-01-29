@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import Companies from './FavoriteCompaniesSelect/Companies';
 import { CompaniesTypes } from './types/companies-types';
+import { ComSelect } from './com-select/com-select';
 
 function App() {
   const [selectedCompanies, setSelectedCompanies] = useState([]);
@@ -19,6 +20,14 @@ function App() {
 
   return (
     <div>
+      <ComSelect
+        isLabel
+      />
+      <ComSelect
+        isLabel
+        isAffiliateOnly
+      />
+
       <Companies
         company_ids={selectedCompanies}
         changeCompany={setSelectedCompanies}

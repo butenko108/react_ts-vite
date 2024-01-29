@@ -41,7 +41,7 @@ const Companies: FC<Props> = props => {
 
   const ALL_DATA_FORMAT = { key: 0, value: 'all', title: 'All Companies' };
 
-  const companies = useSelector(state => state.app.companies);
+  const companiesFS = useSelector(state => state.app.companies);
   const company_stats = company_stats_data; // useSelector((state) => state.rides.companies);
   const setFavoriteCompanies = data =>
     dispatch(actions.appActions.setFavoriteCompanies(data));
@@ -58,8 +58,8 @@ const Companies: FC<Props> = props => {
 
   const getCompaniesByType = () =>
     companiesTypes
-      ? companies.filter(company => companiesTypes.includes(company.type))
-      : companies;
+      ? companiesFS.filter(company => companiesTypes.includes(company.type))
+      : companiesFS;
 
   const toggleFavoriteCompanies = (e, companyId) => {
     e.stopPropagation();
@@ -253,7 +253,7 @@ const Companies: FC<Props> = props => {
         multiple
         inputProps={{
           name: 'company_ids',
-        }}
+        }} // не понятно что это
         displayEmpty
         value={company_ids}
         changed={update}
