@@ -1,41 +1,34 @@
-import { useState } from 'react';
+import { Dispatch, FC } from 'react';
 import { FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import './companies.css';
-import './select.css';
-import companiesFS from '../mock/companies.json';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import GradeIcon from '@mui/icons-material/Grade';
+import { DEFAULT_COMPANY, FAVORITE_COMPANIES_NAME } from '../constants';
+import { Company } from '../types';
+import { filterAffiliateCompanies, sortFavoriteCompanies } from '../utils';
+
+import './companies.css';
+import './select.css';
 
 interface Props {
+  data: Company[];
+  selectedCompanies: string[];
+  setSelectedCompanies: Dispatch<React.SetStateAction<string[]>>;
   className?: string;
   isLabel?: boolean;
   isStandard?: boolean;
   isAffiliateOnly?: boolean;
 }
 
-const ALL_COMPANIES = {
-  "id": 0,
-  "name": "All Companies",
-};
-const favoriteCompaniesName = ['ICP', 'MVP', 'SGB'];
-
-const sortFavoriteCompanies = () => {
-  const favoriteCompanies = companiesFS.filter(company => favoriteCompaniesName.includes(company.name));
-  const unfavoriteCompanies = companiesFS.filter(company => !favoriteCompaniesName.includes(company.name));
-
-  return [...favoriteCompanies, ...unfavoriteCompanies];
-};
-
-const filterAffiliateCompanies = () => {
-  return [...sortFavoriteCompanies().filter(company => company.type === 'affiliate')];
-};
-
-export const ComSelect = ({ className, isLabel, isStandard, isAffiliateOnly }: Props) => {
-  const defaultCompanies = isAffiliateOnly ? filterAffiliateCompanies() : sortFavoriteCompanies();
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+export const Multiselect: FC<Props> = ({ data, selectedCompanies, setSelectedCompanies, className, isLabel, isStandard, isAffiliateOnly }) => {
+  const defaultCompanies = isAffiliateOnly ? filterAffiliateCompanies(data) : sortFavoriteCompanies(data);
 
   const handleChange = (event: SelectChangeEvent<typeof selectedCompanies>) => {
     const { target: { value } } = event;
+
+    if (value.includes(DEFAULT_COMPANY.name)) {
+      return setSelectedCompanies([]);
+    }
+
     setSelectedCompanies(typeof value === 'string' ? [value] : value);
   };
 
@@ -47,7 +40,6 @@ export const ComSelect = ({ className, isLabel, isStandard, isAffiliateOnly }: P
       {isLabel && (
         <InputLabel
           shrink
-          // id="com-select"
           className="input-select"
         >
           Companies
@@ -55,22 +47,15 @@ export const ComSelect = ({ className, isLabel, isStandard, isAffiliateOnly }: P
       )}
 
       <Select
-        // labelId="com-select"
         displayEmpty
         className="select-form-control companies-select"
         multiple
         value={selectedCompanies}
         onChange={handleChange}
         variant={isStandard ? 'standard' : 'outlined'}
-        // renderValue={props.renderValue}
-        // inputProps={props.inputProps}
-        // MenuProps={props.MenuProps}
-        // onClose={props.onClose}
-        // onOpen={props.onOpen}
-        // open={props.open}
       >
         <MenuItem
-          value={ALL_COMPANIES.name}
+          value={DEFAULT_COMPANY.name}
           sx={{ pt: '2px', pb: '2px' }}
         >
           <IconButton
@@ -80,7 +65,7 @@ export const ComSelect = ({ className, isLabel, isStandard, isAffiliateOnly }: P
             <GradeIcon />
           </IconButton>
 
-          <p className='text'>{ALL_COMPANIES.name}</p>
+          <p className='text'>{DEFAULT_COMPANY.name}</p>
         </MenuItem>
 
         {defaultCompanies.map(company => (
@@ -91,11 +76,11 @@ export const ComSelect = ({ className, isLabel, isStandard, isAffiliateOnly }: P
           >
             <IconButton
               size="small"
-              sx={{ color: favoriteCompaniesName.includes(company.name) ? 'rgb(255, 179, 0)' : 'rgba(99,97,97,0.89)' }}
+              sx={{ color: FAVORITE_COMPANIES_NAME.includes(company.name) ? 'rgb(255, 179, 0)' : 'rgba(99,97,97,0.89)' }}
             >
-              {favoriteCompaniesName.includes(company.name) ? <GradeIcon /> : <StarOutlineIcon />}
+              {FAVORITE_COMPANIES_NAME.includes(company.name) ? <GradeIcon /> : <StarOutlineIcon />}
             </IconButton>
-
+            
             <p className='text'>{company.name}</p>
           </MenuItem>
         ))}
